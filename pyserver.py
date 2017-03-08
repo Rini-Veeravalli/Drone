@@ -2,6 +2,7 @@
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 #import SocketServer
+import urlparse
 
 class S(BaseHTTPRequestHandler):
 	def _set_headers(self):
@@ -9,33 +10,42 @@ class S(BaseHTTPRequestHandler):
 		self.send_header('Content-type', 'text/html')
 		self.end_headers()
 
-	def do_GET(self):
-		self._set_headers()
-		#self.wfile.write("<html><body><h1>hi!</h1></body></html>")
-
 	def do_HEAD(self):
 		self._set_headers()
 
-	def do_POST(self):
-		# Doesn't do anything with posted data
-		self._set_headers()
-		#self.wfile.write("<html><body><h1>POST!</h1></body></html>")
-
 	def do_PUT(self):
 		self._set_headers()
-		#deal with the & and parsing the url
-		function handle(request, response) {
-			request.on('data', add);
-			request.on('end', end);
-			var body = "";
-			function add(chunk) {
-				body = body + chunk.toString();
-			}
-			function end() {
-				console.log("Body:", body);
-				reply(response);
-			}
-		}
+			#deal with the & and parsing the url
+			#pip install furl - unlicensed in public domain, supports Python 2 & 3
+		#from furl import furl
+		#f = furl('oneclick_url')
+			#f is a fragment, with a path and query separated by '?'
+		#print f.args['clickcoord_x']
+		#print f.args['clickcoord_y']		
+		#print f.args['i_width']
+		#print f.args['i_height']
+
+		url = oneclick_url
+		parsed = urlparse.urlparse(url)
+		print urlparse.parse_qs(parsed.query)['clickcoord_x']
+
+		self.wfile.write("<html><body><h1>POST!</h1></body></html>")
+		self.wfile.write("clickcoord_x")
+
+		response = 'Selection sent'
+		#function handle(request, response) {
+			#reads the body of the request
+			#request.on('data', add);
+			#request.on('end', end);
+			#var body = "";
+			#function add(chunk) {
+			#	body = body + chunk;
+			#}
+			#function end() {
+			#	console.log("Body:", body);
+			#	reply(response);
+			#}
+		#}
 
 def run(server_class=HTTPServer, handler_class=S, port=8081):
 	server_address = ('', port)

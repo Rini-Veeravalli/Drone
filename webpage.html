@@ -11,7 +11,7 @@
   jQuery(function($){
     // Create variables (in this scope) to hold the API and image size
     var jcrop_api, boundx, boundy, image, canvas = null, context,
-        s_x, s_y, s_x2, s_y2, s_w, s_h, s_mx, s_my,
+        s_x, s_y, s_x2, s_y2, s_w, s_h, s_mx, s_my, xPosition, yPosition,
         streaming = false, width, height;
         
     var acontainer = document.getElementById('container');
@@ -40,18 +40,33 @@
 		var oneclick_url = "/upload_image?fn=frame.jpeg&clickcoord_x=" + xPosition + "&clickcoord_y=" + yPosition + "&i_width=" + target.width + "&i_height=" + target.height;
 		
 		if($('input[name=toggleswitch]').is(':checked')) {
-			xhr.open('PUT', 'dragbox_url');
+			xhr.open('PUT', 'dragbox_url', true);
+		
+		//xhr.setRequestHeader('Content-Type', 'image/jpeg');
+		//callback for finish
+			xhr.onload = function() {
+				if(xhr.status === 200) {
+					var userInfo = xhr.responseText;
+				}
+			};
+		//send the image data
+		//xhr.send(image_data);
+			xhr.send(); //NS_ERROR_DOM_BAD_URI: Access to restricted URI denied
 		}
 		else {
-			xhr.open('PUT', 'oneclick_url');
+			xhr.open('PUT', 'oneclick_url', true);
+			//xhr.setRequestHeader('Content-Type', 'image/jpeg');
+			//callback for finish
+			xhr.onload = function() {
+				if(xhr.status === 200) {
+					var userInfo = xhr.responseText;
+				}
+			};
+			//send the image data
+			//xhr.send(image_data);
+			xhr.send('oneclick_url'); //NS_ERROR_DOM_BAD_URI: Access to restricted URI denied
 		}
-		//xhr.setRequestHeader('Content-Type', 'image/jpeg');
-		xhr.onload = function() {
-			if(xhr.status === 200) {
-				//var userInfo = xhr.responseText;
-			}
-		};
-		xhr.send(image_data);
+		
 	});
     
 	function showCoords(c) {
@@ -160,7 +175,8 @@ function getClickCoOrds(e) {
             //var xPosition = e.pageX - acontainer.offset().left;
             //var yPosition = e.pageY - acontainer.offset().top;
             //window.alert("(" + xPosition + "," + yPosition + ")");
-            console.log("(" + xPosition + "," + yPosition + ")");          
+            console.log("(" + xPosition + "," + yPosition + ")");   
+			return xPosition, yPosition;       
             
         }
         function getPos(el) {
