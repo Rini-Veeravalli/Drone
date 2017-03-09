@@ -1,8 +1,11 @@
 #!/usr/bin/python
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 from os import curdir, sep
+import cgi
+from cgi import parse_header, parse_multipart
 
 import urlparse
+#import requests
 PORT_NUMBER = 8080
 
 #This class will handles any incoming request from
@@ -14,13 +17,20 @@ class myHandler(BaseHTTPRequestHandler):
 		self.send_header('Content-type', 'text/html')
 		self.end_headers()
 
-	def do_PUT(self):
+	def do_POST(self):
 		self._set_headers()
-		url = 'oneclick_url'
-		parsed = urlparse.urlparse(url)
-		#print urlparse.parse_qs(parsed.query)['clickcoord_x']
-		print url
-		print self
+		ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
+		length = int(self.headers.getheader('content-length'))	
+		#field_data = self.rfile.read(length)
+		#fields = urlparse.parse_qs(field_data)
+		
+		postvars = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
+		#print urlparse(self.headers.getheader())
+
+		print postvars
+		#print field_data
+		#print fields
+
 		
 
 	#Handler for the GET requests

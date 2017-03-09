@@ -3,6 +3,7 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 #import SocketServer
 import urlparse
+import requests
 
 class S(BaseHTTPRequestHandler):
 	def _set_headers(self):

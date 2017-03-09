@@ -39,32 +39,32 @@
 		var dragbox_url = "/upload_image?fn=frame.jpeg&topright_x=" + s_x + "&topright_y" + s_y + "&i_width=" + s_w + "&i_height=" + s_h;
 		var oneclick_url = "/upload_image?fn=frame.jpeg&clickcoord_x=" + xPosition + "&clickcoord_y=" + yPosition + "&i_width=" + target.width + "&i_height=" + target.height;
 		
-		if($('input[name=toggleswitch]').is(':checked')) {
-			xhr.open('PUT', 'dragbox_url', true);
+		if($('input[name=toggleswitch]').is(':checked')) { /*and values not undefined??*/
+			xhr.open('POST', dragbox_url, true);
 		
 		//xhr.setRequestHeader('Content-Type', 'image/jpeg');
-		//callback for finish
+		/*callback for finish*/
 			xhr.onload = function() {
 				if(xhr.status === 200) {
 					var userInfo = xhr.responseText;
 				}
 			};
-		//send the image data
-		//xhr.send(image_data);
-			xhr.send(); //NS_ERROR_DOM_BAD_URI: Access to restricted URI denied
+		/*send the image data*/
+		xhr.send(image_data);
+		//	xhr.send(); //NS_ERROR_DOM_BAD_URI: Access to restricted URI denied
 		}
 		else {
-			xhr.open('PUT', 'oneclick_url', true);
+			xhr.open('POST', oneclick_url, true);
 			//xhr.setRequestHeader('Content-Type', 'image/jpeg');
-			//callback for finish
+			/*callback for finish*/
 			xhr.onload = function() {
 				if(xhr.status === 200) {
 					var userInfo = xhr.responseText;
 				}
 			};
-			//send the image data
-			//xhr.send(image_data);
-			xhr.send('oneclick_url'); //NS_ERROR_DOM_BAD_URI: Access to restricted URI denied
+			/*send the image data*/
+			xhr.send(image_data, xPosition, yPosition, target.width, target.height);
+			//xhr.send(); //NS_ERROR_DOM_BAD_URI: Access to restricted URI denied
 		}
 		
 	});
@@ -116,13 +116,43 @@
       }
       else 
       {
-        console.log('not on switch - one-click');
-        context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        if(jcrop_api!=null){
+        //console.log('not on switch - one-click');
+        //context = canvas.getContext('2d');
+        //context.clearRect(0, 0, canvas.width, canvas.height);
+        //if(jcrop_api!=null){
+        //  jcrop_api.destroy();
+        //}
+        startup();
+		//if(!streaming) {
+        //	height = image.videoHeight / (image.videoWidth/width);
+        //	if(isNaN(height)) {
+        //  		height = width / (4/3);
+        //	}
+        //	image.setAttribute('width', width);
+        //	image.setAttribute('height', height);
+        //	streaming = true;
+      	//}
+      
+      	
+      	//acontainer.addEventListener('dblclick', function firstClick(l) {
+        //	getClickCoOrds(l);
+		//	console.log("1" + xPosition + ", " + yPosition);
+        //	takepicture();
+        //	l.preventDefault();
+		//	return xPosition, yPosition;
+      	//}, false);
+      }
+    });
+
+	window.addEventListener('load', startup, false);
+
+	function startup(el) {
+		console.log('not on switch - one-click');
+    	context = canvas.getContext('2d');
+    	context.clearRect(0, 0, canvas.width, canvas.height);
+		if(jcrop_api!=null){
           jcrop_api.destroy();
         }
-        //startUp();
 		if(!streaming) {
         	height = image.videoHeight / (image.videoWidth/width);
         	if(isNaN(height)) {
@@ -136,70 +166,48 @@
       	
       	acontainer.addEventListener('dblclick', function firstClick(l) {
         	getClickCoOrds(l);
+			console.log(xPosition + ", " + yPosition);
         	takepicture();
         	l.preventDefault();
+			return xPosition, yPosition;
+
       	}, false);
-      }
-    });
-
-window.addEventListener('load', startup, false);
-
-function startup(el) {
-	console.log('not on switch - one-click');
-    context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
-	if(!streaming) {
-        	height = image.videoHeight / (image.videoWidth/width);
-        	if(isNaN(height)) {
-          		height = width / (4/3);
-        	}
-        	image.setAttribute('width', width);
-        	image.setAttribute('height', height);
-        	streaming = true;
-      	}
-      
-      	
-      	acontainer.addEventListener('dblclick', function firstClick(l) {
-        	getClickCoOrds(l);
-        	takepicture();
-        	l.preventDefault();
-      	}, false);
-}
+	}
 
 
-function getClickCoOrds(e) {
-            var parentPos = getPos(acontainer);
-            var xPosition = e.clientX - parentPos.x;
-            var yPosition = e.clientY - parentPos.y;
+	function getClickCoOrds(e) {
+		var parentPos = getPos(acontainer);
+        xPosition = e.clientX - parentPos.x;
+        yPosition = e.clientY - parentPos.y;
             //console.log(parentPos);
             //var xPosition = e.pageX - acontainer.offset().left;
             //var yPosition = e.pageY - acontainer.offset().top;
             //window.alert("(" + xPosition + "," + yPosition + ")");
-            console.log("(" + xPosition + "," + yPosition + ")");   
-			return xPosition, yPosition;       
+        console.log("(" + xPosition + "," + yPosition + ")");   
+		return xPosition, yPosition;       
             
-        }
-        function getPos(el) {
-            var xPos = 0;
-            var yPos = 0;
-            while(el) {
-                if(el.tagName == "BODY") {
-                    var xScroll = el.scrollLeft || document.documentElement.scrollLeft;
-                    var yScroll = el.scrollTop || document.documentElement.scrollTop;
-                }
-                else {  //for all non-BODY elements
-                    xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
-                    yPos += (el.offsetTop - el.scrollTop + el.clientTop);
-                }
-                el = el.offsetParent;
+	}
+    function getPos(el) {
+    	var xPos = 0;
+        var yPos = 0;
+        while(el) {
+        	if(el.tagName == "BODY") {
+                var xScroll = el.scrollLeft || document.documentElement.scrollLeft;
+                var yScroll = el.scrollTop || document.documentElement.scrollTop;
             }
-            //console.log(xPos + "," + yPos); //parent pos coords
-            return {
-                x: xPos,
-                y: yPos,
-            };
+            else {  //for all non-BODY elements
+                xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+                yPos += (el.offsetTop - el.scrollTop + el.clientTop);
+            }
+                el = el.offsetParent;
         }
-        function takepicture() {
+            //console.log(xPos + "," + yPos); //parent pos coords
+        return {
+            x: xPos,
+            y: yPos,
+        };
+    }
+    function takepicture() {
             
                    //context.drawImage(target, 0, 0, width, height);
                     //var data = canvas.toDataURL('image/jpeg', 1.0);
@@ -213,7 +221,7 @@ function getClickCoOrds(e) {
 		context = canvas.getContext('2d');
         context.drawImage(image, 0, 0);
                 
-        }
+    }
 
 
   });
