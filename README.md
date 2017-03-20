@@ -3,6 +3,7 @@ Guide to setting up the Drone LiveStream
 ------
 
 ###Table of Contents
+
 [Virtual Machine](#virtualmachine)	
 
 [Using an Ubuntu VM](#usinganubuntuvm)	
@@ -36,9 +37,11 @@ Guide to setting up the Drone LiveStream
 <a name="virtualmachine"/>
 ###Virtual Machine
 </a>
+
 <a name="usinganubuntuvm"/>
 ####Using an Ubuntu VM:
 </a> 
+
 For testing on your own machine:  
 Download VMware and Ubuntu ISO file/image (See Naim’s document for VMware installation).
 
@@ -51,6 +54,7 @@ Drone: The rest of the set-up should be run on the JETSON TK1.
 <a name="motionprerequisites"/>
 ###Motion Pre-requisites:
 </a> 
+
 Needed are certain libraries from _glibc_, _libjpeg_, _zlib_, _ffmpeg_ and their development counterparts, GNU ‘make’ 3.79 or newer, GCC 4.7 or newer.  
 _Perl5_ not needed, but can be used to test installation. 
 
@@ -64,6 +68,7 @@ _Perl5_ not needed, but can be used to test installation.
 <a name="packageinstallation"/>
 ####Package Installation:
 </a> 
+
 Can download these packages online, follow their installation guides, which usually require: `./configure; make; sudo make install`.
 
 - For _lipjpeg_ – use `dos2unix` before configuring  
@@ -91,6 +96,7 @@ Useful commands:
 <a name="motioninstallation"/>
 ###Motion Installation:
 </a> 
+
 Again, you can download source code, 
 
 OR type in terminal (Recommended): `sudo apt-get install motion`  
@@ -118,6 +124,7 @@ Make directory to store images from motion:
 <a name="editingthemotionconfigurationfile"/>
 ###Editing the Motion configuration file:
 </a>
+
 Edit ~/.motion/motion.conf  (.conf file in the home directory):
 
 
@@ -125,6 +132,7 @@ Edit ~/.motion/motion.conf  (.conf file in the home directory):
 <a name="daemon">
 ####Daemon
 </a>
+
 __`daemon on`__  daemon starts automatically
 
 
@@ -132,6 +140,7 @@ __`daemon on`__  daemon starts automatically
 <a name="basic">
 ####Basic Setup Mode
 </a>
+
 `logfile /var/log/motion/motion.log` 	file to save log messages
 
 
@@ -139,6 +148,7 @@ __`daemon on`__  daemon starts automatically
 <a name="capture">
 ####Capture device options
 </a>
+
 `videodevice /dev/video0`	videodevice to be used for capturing, /dev/video0 present when video camera is connected to the computer via USB.
 
 `rotate 0`			if using a camera mount that rotates, rotate image this no. of degrees. Values: 0=no rotation, 90, 180, 270
@@ -158,6 +168,7 @@ __`height 480`__			“ 	“	“ 	- image height
 <a name="motion">
 ####Motion Detection Settings
 </a>
+
 `threshold 1500`	no. of changed pixes in an image that triggers motion detection
 
 `lightswitch 0`		ignore sudden massive light intensity changes given as a percentage of the picture area that changed intensity. Range: 0-100
@@ -173,6 +184,7 @@ __`post-capture 2`__		“	“	“     “   “ 	after motion. Use large values 
 <a name="image">
 ####Image File Output
 </a>
+
 `output_pictures off` Output pictures when motion is detected. 'first'-first picture of event saved. 'best'-picture with most motion is saved. 'center'-picture with motion nearest centre is saved.
 
 `quality 75` quality (in %) use by the jpeg compression
@@ -184,6 +196,7 @@ __`post-capture 2`__		“	“	“     “   “ 	after motion. Use large values 
 <a name="ffmpeg">
 ####FFMPEG related options
 </a>
+
 __`ffmpeg_output_movies on`__	ffmpeg encodes movies in realtime
 
 __`ffmpeg_bps 500000`__ 		ffmpeg encoder's bitrate
@@ -195,6 +208,7 @@ __`ffmpeg_video_codec msmpeg4`__	ffmpeg's codec for video compression. msmpeg4 b
 <a name="text">
 ####Text Display
 </a>
+
 __`text_right %d-%m-%Y\n%T-%q`__ 	swap day and year, to follow the UK format
 
 `text_event` swap day and year again
@@ -204,6 +218,7 @@ __`text_right %d-%m-%Y\n%T-%q`__ 	swap day and year, to follow the UK format
 <a name="target">
 ####Target Directories and filenames For Images And Films
 </a>
+
 __`target_dir /home/username/.motion/motion-images`__ *	current working directory - target directory for 
 picture and movie files to be saved, better as an absolute path
 
@@ -220,6 +235,7 @@ __`timelapse_filename %d%m%Y-timelapse`__ 	change to UK format
 <a name="live">
 ####Live Stream Server
 </a>
+
 `stream quality 50` 	quality (in %) of jpeg images produced
 
 __`stream_localhost off`__  Restricts stream connections to localhost only when 'on'. We want to be able to view the stream from other clients.
@@ -229,6 +245,7 @@ __`stream_localhost off`__  Restricts stream connections to localhost only when 
 <a name="http">
 ####HTTP Based Control
 </a>
+
 __webcontrol_localhost off__  Restricts control connects to local host only when 'on'
 
 
@@ -236,6 +253,7 @@ __webcontrol_localhost off__  Restricts control connects to local host only when
 <a name="tracking">
 ####Tracking(Pan/Tilt)
 </a>
+
 See .config file for options
 
 ------
@@ -247,6 +265,7 @@ Do we want to log to the database when creating motion-triggered picture/snapsho
 <a name="thread">
 ####Thread config files
 </a>
+
 One for each camera, with configurations for each. With one camera, need only the .config file. With two cameras, need the .config file and a thread file for each camera.
 
 
@@ -273,6 +292,7 @@ Video stream should appear
 <a name="webbrowser">
 ###Web Browser
 </a>
+
 How to access the video stream via a html file.  
 
 Save the _index.html_ inside the _.motion_ directory.
