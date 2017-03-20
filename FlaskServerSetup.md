@@ -13,5 +13,8 @@
   `cd flask`
   
   `source bin/activate`
-  
-`sudo apt-get install python-flask`
+    
+`sudo apt-get install python3-flask`
+
+  then `cd ..` back into directory with flaskserver.py
+`python3 flaskserver.py`
