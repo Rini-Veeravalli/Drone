@@ -16,31 +16,28 @@ Guide to setting up the Drone LiveStream
 
 [Editing the Motion configuration file](#editingthemotionconfigurationfile)	
 
-... [Daemon](#daemon)  
-...[Basic Setup Mode](#basic)  
-...[Capture Device Options](#capture)  
-..*[Motion Detection Settings](#motion)  
-..*[Image File Output](#image)  
-..*[FFMPEG related options](#ffmpeg)  
-..*[Text Display](#text)  
-..*[Target Directories and filenames For Images And Films](#target)  
-..*[Live Stream Server](#live)    
-..*[HTTP Based Control](#http)     
-..*[Tracking(Pan/Tilt)](#tracking)  
-..*[Thread config files](#thread)  
+[Daemon](#daemon)  
+[Basic Setup Mode](#basic)  
+[Capture Device Options](#capture)  
+[Motion Detection Settings](#motion)  
+[Image File Output](#image)  
+[FFMPEG related options](#ffmpeg)  
+[Text Display](#text)  
+[Target Directories and filenames For Images And Films](#target)  
+[Live Stream Server](#live)    
+[HTTP Based Control](#http)     
+[Tracking(Pan/Tilt)](#tracking)  
+[Thread config files](#thread)  
 
 [Web Browser](#webbrowser)
 
 
 
 ----
-<a name="virtualmachine"/>
-###Virtual Machine
-</a>
+<a name="virtualmachine"/>###Virtual Machine</a>
 
-<a name="usinganubuntuvm"/>
-####Using an Ubuntu VM:
-</a> 
+
+<a name="usinganubuntuvm"/>####Using an Ubuntu VM:</a> 
 
 For testing on your own machine:  
 Download VMware and Ubuntu ISO file/image (See Naim’s document for VMware installation).
@@ -51,9 +48,7 @@ Drone: The rest of the set-up should be run on the JETSON TK1.
 
 ----
 
-<a name="motionprerequisites"/>
-###Motion Pre-requisites:
-</a> 
+<a name="motionprerequisites"/>###Motion Pre-requisites:</a> 
 
 Needed are certain libraries from _glibc_, _libjpeg_, _zlib_, _ffmpeg_ and their development counterparts, GNU ‘make’ 3.79 or newer, GCC 4.7 or newer.  
 _Perl5_ not needed, but can be used to test installation. 
