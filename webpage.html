@@ -33,10 +33,11 @@
     });
    
 	$("#send").click(function(e) {
-		var image_data = context.getImageData(0, 0, canvas.width, canvas.height);
+		var image_data = canvas.toDataURL("image/png");
+	//context.getImageData(0, 0, canvas.width, canvas.height);
 		var xhr = new XMLHttpRequest();
 		var topright_x, topright_y, clickcoord_x, clickcoord_y, i_width, i_height;
-		var dragbox_url = "/upload_image?fn=frame.jpeg&topright_x=" + s_x + "&topright_y" + s_y + "&i_width=" + s_w + "&i_height=" + s_h;
+		var dragbox_url = "/upload_image?fn=frame.jpeg&topright_x=" + s_x + "&topright_y=" + s_y + "&i_width=" + s_w + "&i_height=" + s_h;
 		var oneclick_url = "/upload_image?fn=frame.jpeg&clickcoord_x=" + xPosition + "&clickcoord_y=" + yPosition + "&i_width=" + target.width + "&i_height=" + target.height;
 		
 		if($('input[name=toggleswitch]').is(':checked')) { /*and values not undefined??*/

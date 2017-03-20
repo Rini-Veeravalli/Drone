@@ -2,6 +2,8 @@
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 from os import curdir, sep
 import cgi
+import urllib, cStringIO
+from PIL import Image
 from cgi import parse_header, parse_multipart
 
 import urlparse
@@ -19,7 +21,7 @@ class myHandler(BaseHTTPRequestHandler):
 
 	def do_POST(self):
 		self._set_headers()
-		ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
+		#ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
 		length = int(self.headers.getheader('content-length'))	
 		#field_data = self.rfile.read(length)
 		#fields = urlparse.parse_qs(field_data)
@@ -28,8 +30,16 @@ class myHandler(BaseHTTPRequestHandler):
 		#print urlparse(self.headers.getheader())
 
 		print postvars
+
+		parsed_path = urlparse.urlparse(self.path)
+		params = dict([p.split('=') for p in parsed_path[4].split('&')])
+		#except:
+		#	params = {}
 		#print field_data
 		#print fields
+		print params
+
+		
 
 		
 
@@ -85,3 +95,8 @@ try:
 except KeyboardInterrupt:
 	print '^C received, shutting down the web server'
 	server.socket.close()
+
+
+#webcam-streamer
+#flask camera video streaming
+#base64 decode, split by comma
