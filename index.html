@@ -1,0 +1,378 @@
+  {% extends "layout.html" %}
+
+  {% block content %}
+
+  
+  <script>
+	var U1 = {{ U1 }};
+        
+    function sensorFunction() {
+	document.getElementById("sensor").innerHTML = U1;
+    }
+   </script>
+
+
+  <script type="text/javascript">
+  
+  jQuery(function($){
+    // Create variables (in this scope) to hold the API and image size
+    var jcrop_api, boundx, boundy, image, canvas = null, context,
+        s_x, s_y, s_x2, s_y2, s_w, s_h, s_mx, s_my, xPosition, yPosition,
+        streaming = false, width, height;
+    
+
+    var acontainer = document.getElementById('container');
+    image = document.getElementById('target');
+    canvas = document.getElementById('canvas');
+    canvas.width = document.getElementById('target').width;
+    canvas.height = document.getElementById('target').height;
+    
+    $("#show-preview").click(function(e) {
+      if($('input[name=toggleswitch]').is(':checked')) {
+        
+        context.clearRect(0, 0, canvas.width, canvas.height);
+		    context = canvas.getContext('2d');
+        context.drawImage(image, s_x, s_y, s_w, s_h, 0, 0, s_w, s_h);
+      }
+      else {
+			
+      }
+    });
+
+    $("#send").click(function(e) {
+		  var image_data = canvas.toDataURL("image/png");
+      //context.getImageData(0, 0, canvas.width, canvas.height);
+		  var xhr = new XMLHttpRequest();
+		  var topright_x, topright_y, clickcoord_x, clickcoord_y, i_width, i_height;
+		  var dragbox_url = "/upload_image?fn=frame.jpeg&topright_x=" + s_x + "&topright_y=" + s_y + "&i_width=" + s_w + "&i_height=" + s_h;
+		  var oneclick_url = "/upload_image?fn=frame.jpeg&clickcoord_x=" + xPosition + "&clickcoord_y=" + yPosition + "&i_width=" + target.width + "&i_height=" + target.height;
+		
+		  if($('input[name=toggleswitch]').is(':checked')) { /*and values not undefined??*/
+        xhr.open('GET', dragbox_url, true);
+        //xhr.setRequestHeader('Content-Type', 'image/jpeg');
+
+        /*callback for finish*/
+        xhr.onload = function() {
+				  if(xhr.status === 200) {
+            var userInfo = xhr.responseText;
+				  }
+        };
+        /*send the image data*/
+        xhr.send(image_data);
+		  }
+		  else {
+  			xhr.open('GET', oneclick_url, true);
+  			//xhr.setRequestHeader('Content-Type', 'image/jpeg');
+  			/*callback for finish*/
+  			xhr.onload = function() {
+  				if(xhr.status === 200) {
+  					var userInfo = xhr.responseText;
+  				}
+  			};
+  			/*send the image data*/
+  			xhr.send(image_data);	
+  		}
+
+    });
+
+    function showCoords(c) {
+      console.log(c.x + ", " + c.y + ", " + c.x2 + ", " + c.y2 + ", " + c.w + ", " + c.h);
+      s_x = c.x;
+      s_y = c.y;
+      s_x2 = c.x2;
+      s_y2 = c.y2;
+      s_w = c.w;
+      s_h = c.h;
+      s_mx = c.x + (c.w / 2);
+      s_my = c.y + (c.h / 2);
+      console.log(s_mx + ", " + s_my);
+      
+      return s_x, s_y, s_x2, s_y2, s_w, s_h, s_mx, s_my;
+    }
+    
+    $('input[name=toggleswitch]').change(function(){
+      if($(this).is(':checked'))
+      {
+        console.log('on switch - dragbox');
+		    context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        acontainer.removeEventListener('dblclick', function firstClick(l) {
+          getClickCoOrds(l);
+          takepicture();
+          l.preventDefault();
+        }, false);
+   
+        $('#target').Jcrop({
+          onSelect: showCoords,  //METHOD 1 **INTEGRATE**
+          //aspectRatio: xsize / ysize;
+        },function(){
+          // Use the API to get the real image size
+          var bounds = this.getBounds();
+          boundx = bounds[0];
+          boundy = bounds[1];
+          // Store the API in the jcrop_api variable
+          jcrop_api = this;
+          // Move the preview into the jcrop container for css positioning
+          //$preview.appendTo(jcrop_api.ui.holder);
+          
+          $('canvas').show();
+
+
+        });
+      }
+      else 
+      {
+        startup();	
+      }
+    });
+
+    
+    function startup(el) {
+		  console.log('not on switch - one-click');
+    	context = canvas.getContext('2d');
+    	context.clearRect(0, 0, canvas.width, canvas.height);
+		  if(jcrop_api!=null){
+        jcrop_api.destroy();
+      }
+
+		  if(!streaming) {
+       	height = image.videoHeight / (image.videoWidth/width);
+       	if(isNaN(height)) {
+       		height = width / (4/3);
+       	}
+       	image.setAttribute('width', width);
+       	image.setAttribute('height', height);
+       	streaming = true;
+      }
+      
+      acontainer.addEventListener('dblclick', function firstClick(l) {
+       	getClickCoOrds(l);
+        console.log(xPosition + ", " + yPosition);
+        takepicture();
+        l.preventDefault();
+        return xPosition, yPosition;
+      }, false);
+    }
+
+  	function getClickCoOrds(e) {
+  		var parentPos = getPos(acontainer);
+      xPosition = e.clientX - parentPos.x;
+      yPosition = e.clientY - parentPos.y;
+              //console.log(parentPos);
+              //var xPosition = e.pageX - acontainer.offset().left;
+              //var yPosition = e.pageY - acontainer.offset().top;
+              //window.alert("(" + xPosition + "," + yPosition + ")");
+      console.log("(" + xPosition + "," + yPosition + ")");   
+  		return xPosition, yPosition;               
+  	}
+
+    function getPos(el) {
+    	var xPos = 0;
+      var yPos = 0;
+      while(el) {
+       	if(el.tagName == "BODY") {
+          var xScroll = el.scrollLeft || document.documentElement.scrollLeft;
+          var yScroll = el.scrollTop || document.documentElement.scrollTop;
+        }
+        else {  //for all non-BODY elements
+          xPos += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+          yPos += (el.offsetTop - el.scrollTop + el.clientTop);
+        }
+        el = el.offsetParent;
+      }
+            //console.log(xPos + "," + yPos); //parent pos coords
+      return {
+        x: xPos,
+        y: yPos,
+      };
+    }
+    
+    function takepicture() {
+            
+                   //context.drawImage(target, 0, 0, width, height);
+                    //var data = canvas.toDataURL('image/jpeg', 1.0);
+                    //window.open(canvas.toDataURL('image/jpeg', 1.0));
+					
+                    //console.log("data:" + data);
+                    //canvas.setAttribute('src', data);
+                    //$('canvas').show();
+		  context.clearRect(0, 0, canvas.width, canvas.height);
+		  context = canvas.getContext('2d');
+      context.drawImage(image, 0, 0);
+                
+    }
+
+    window.addEventListener('load', startup, false);
+
+  });
+
+</script>
+
+<link rel="stylesheet" href="http://jcrop-cdn.tapmodo.com/v0.9.12/css/jquery.Jcrop.css" type="text/css" />  
+<style type="text/css">
+/* Apply these styles only when #preview-pane has
+   been placed within the Jcrop widget */
+.jcrop-holder #preview-pane {
+  display: block;
+/*  display: none;
+*/  position: absolute;
+  z-index: 2000;
+  top: 10px;
+  right: -200px; /*depends on camera resolution*/
+  padding: 6px;
+  border: 1px rgba(0,0,0,.4) solid;
+  background-color: white;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+}
+/* The Javascript code will set the aspect ratio of the crop
+   area based on the size of the thumbnail preview,
+   specified here */
+#preview-pane .preview-container {
+  width: 200px;
+  height: 200px;
+  /*width: <?php echo $target_w?>px;
+  height: <?php echo $target_h?>px;*/
+  /*width: document.getElementById('target').width() + 'px';
+  height: document.getElementById('target').height() + 'px';*/
+  overflow: hidden;
+}
+#canvas {
+  display: inline-block;
+/*  max-width: 602; //***//
+/*  max-height: 400;*/
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+.switch input {display:none;}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+input:checked + .slider {
+  background-color: #2196F3;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
+#container { //****//
+  margin: 0px auto;
+  width: 602px;
+  height: 400px;
+  display: inline-block;
+  overflow: hidden;
+  cursor: pointer;
+  position: absolute;
+}
+
+</style>
+
+
+</head>
+<body>
+
+<!--div class="container"-->
+<div class="row">
+<div class="span12">
+<div class="jc-demo-box">
+
+<div class="page-header">
+
+<h1>Drone Live-Stream | Object Selection </h1>
+</div>
+
+<label class="switch">
+  <input type="checkbox" name="toggleswitch"/>
+  <div class="slider round"></div>
+</label>
+
+<div id="container">
+  <!-- <img src="{{ url_for('static', filename='sago.jpg')}}" id="target" alt="[Jcrop Example]" /> -->
+  <img src="http://192.168.8.1:8082/?action=stream" id="target" alt="[LiveStream]" />
+</div>
+<br />
+
+<!--div id="preview-pane">
+  <div class="preview-container">
+    <img src="sago.jpg" class="jcrop-preview" alt="Preview" />
+    < <img src="http://192.168.159.128/stream" class="jcrop-preview" alt="Preview" /> >
+  </div>
+  <b>PREVIEW: NOT TO SCALE</b>
+</div-->
+
+<br />
+<br />
+<br />
+<br />
+<br />  
+<canvas id="canvas"></canvas>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />  
+<button id="send">Click to confirm selection and send to drone</button>
+<button id="show-preview">Show preview of image</button>
+
+
+
+
+<br />
+<button id="sensor_data" onclick="sensorFunction()">Click for sensor data</button>
+<p id="sensor"></p>
+
+<div class="description">
+  <p>
+    <b>Use toggle to switch between one-click (off) and drag-box (on) methods.</b>
+  </p>
+</div>
+
+
+</div>
+</div>
+</div>
+</div>
+
+</body>
+</html>
+
+{% endblock %}
