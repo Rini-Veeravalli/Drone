@@ -39,41 +39,44 @@
       }
     });
 
-    $("#send").click(function(e) {
-		  var image_data = canvas.toDataURL("image/png");
-      //context.getImageData(0, 0, canvas.width, canvas.height);
-		  var xhr = new XMLHttpRequest();
-		  var topright_x, topright_y, clickcoord_x, clickcoord_y, i_width, i_height;
-		  var dragbox_url = "/upload_image?fn=frame.jpeg&topright_x=" + s_x + "&topright_y=" + s_y + "&i_width=" + s_w + "&i_height=" + s_h;
-		  var oneclick_url = "/upload_image?fn=frame.jpeg&clickcoord_x=" + xPosition + "&clickcoord_y=" + yPosition + "&i_width=" + target.width + "&i_height=" + target.height;
+    // $("#send").click(function(e) {
+		  // var image_data = canvas.toDataURL("image/png");
+    //   //context.getImageData(0, 0, canvas.width, canvas.height);
+		  // var xhr = new XMLHttpRequest();
+		  // var topright_x, topright_y, clickcoord_x, clickcoord_y, i_width, i_height;
+		  // var dragbox_url = "/upload_image?fn=frame.jpeg&topright_x=" + s_x + "&topright_y=" + s_y + "&i_width=" + s_w + "&i_height=" + s_h;
+		  // var oneclick_url = "/upload_image?fn=frame.jpeg&clickcoord_x=" + xPosition + "&clickcoord_y=" + yPosition + "&i_width=" + target.width + "&i_height=" + target.height;
 		
-		  if($('input[name=toggleswitch]').is(':checked')) { /*and values not undefined??*/
-        xhr.open('GET', dragbox_url, true);
-        //xhr.setRequestHeader('Content-Type', 'image/jpeg');
+		  // if($('input[name=toggleswitch]').is(':checked')) { /*and values not undefined??*/
+    //         /*xhr.open('GET', dragbox_url, true);*/
+    //     //xhr.setRequestHeader('Content-Type', 'image/jpeg');
 
-        /*callback for finish*/
-        xhr.onload = function() {
-				  if(xhr.status === 200) {
-            var userInfo = xhr.responseText;
-				  }
-        };
-        /*send the image data*/
-        xhr.send(image_data);
-		  }
-		  else {
-  			xhr.open('GET', oneclick_url, true);
-  			//xhr.setRequestHeader('Content-Type', 'image/jpeg');
-  			/*callback for finish*/
-  			xhr.onload = function() {
-  				if(xhr.status === 200) {
-  					var userInfo = xhr.responseText;
-  				}
-  			};
-  			/*send the image data*/
-  			xhr.send(image_data);	
-  		}
+    //     /*callback for finish*/
+    //         /*xhr.onload = function() {
+    // 				  if(xhr.status === 200) {
+    //             var userInfo = xhr.responseText;
+    // 				  }
+    //         };*/
+    //     /*send the image data*/
+    //         /*xhr.send(image_data);*/
+    //     $.get("/getmethod/<"+dragbox_url+">")
+		  // }
+		  // else {
+  		// 	// xhr.open('GET', oneclick_url, true);
+  		// 	// //xhr.setRequestHeader('Content-Type', 'image/jpeg');
+  		// 	// /*callback for finish*/
+    //  //  			xhr.onload = function() {
+    //  //  				if(xhr.status === 200) {
+    //  //  					var userInfo = xhr.responseText;
+    //  //  				}
+    //  //  			};
+  		// 	// /*send the image data*/
+  		// 	//    xhr.send(image_data);	
+    //     $.get("/getmethod/<"+oneclick_url+">")
 
-    });
+  		// }
+
+    // });
 
     function showCoords(c) {
       console.log(c.x + ", " + c.y + ", " + c.x2 + ", " + c.y2 + ", " + c.w + ", " + c.h);
@@ -89,6 +92,19 @@
       
       return s_x, s_y, s_x2, s_y2, s_w, s_h, s_mx, s_my;
     }
+
+    function send_dragbox(){
+      $.get(
+          url ="/getmethod/",
+          data = {"x":s_x, 
+                  "y":s_y,
+                  "w":s_w,
+                  "h":s_h},
+          success=function(data){
+            alert('success! your thing was sent');
+          }
+          );
+    }
     
     $('input[name=toggleswitch]').change(function(){
       if($(this).is(':checked'))
@@ -99,12 +115,46 @@
         acontainer.removeEventListener('dblclick', function firstClick(l) {
           getClickCoOrds(l);
           takepicture();
+
+          var topright_x, topright_y, clickcoord_x, clickcoord_y, i_width, i_height;
+      var dragbox_url = "/upload_image?fn=frame.jpeg&topright_x=" + s_x + "&topright_y=" + s_y + "&i_width=" + s_w + "&i_height=" + s_h;
+      var oneclick_url = "/upload_image?fn=frame.jpeg&clickcoord_x=" + xPosition + "&clickcoord_y=" + yPosition + "&i_width=" + target.width + "&i_height=" + target.height;
+    
+      if($('input[name=toggleswitch]').is(':checked')) { /*and values not undefined??*/
+            /*xhr.open('GET', dragbox_url, true);*/
+        //xhr.setRequestHeader('Content-Type', 'image/jpeg');
+
+        /*callback for finish*/
+            /*xhr.onload = function() {
+              if(xhr.status === 200) {
+                var userInfo = xhr.responseText;
+              }
+            };*/
+        /*send the image data*/
+            /*xhr.send(image_data);*/
+        $.get("/getmethod/<"+dragbox_url+">")
+      }
+      else {
+        // xhr.open('GET', oneclick_url, true);
+        // //xhr.setRequestHeader('Content-Type', 'image/jpeg');
+        // /*callback for finish*/
+     //       xhr.onload = function() {
+     //         if(xhr.status === 200) {
+     //           var userInfo = xhr.responseText;
+     //         }
+     //       };
+        // /*send the image data*/
+        //    xhr.send(image_data); 
+        $.get("/getmethod/<"+oneclick_url+">")
+
+      }
           l.preventDefault();
         }, false);
    
         $('#target').Jcrop({
           onSelect: showCoords,  //METHOD 1 **INTEGRATE**
           //aspectRatio: xsize / ysize;
+          onRelease: send_dragbox
         },function(){
           // Use the API to get the real image size
           var bounds = this.getBounds();
@@ -149,6 +199,44 @@
        	getClickCoOrds(l);
         console.log(xPosition + ", " + yPosition);
         takepicture();
+        var topright_x, topright_y, clickcoord_x, clickcoord_y, i_width, i_height;
+      var dragbox_url = "/upload_image?fn=frame.jpeg&topright_x=" + s_x + "&topright_y=" + s_y + "&i_width=" + s_w + "&i_height=" + s_h;
+      var oneclick_url = "/upload_image?fn=frame.jpeg&clickcoord_x=" + xPosition + "&clickcoord_y=" + yPosition + "&i_width=" + target.width + "&i_height=" + target.height;
+    
+      if($('input[name=toggleswitch]').is(':checked')) { 
+
+        $.get(
+          url ="/getmethod/",
+          data = {"x":s_x, 
+                  "y":s_y,
+                  "w":s_w,
+                  "h":s_h},
+          success=function(data){
+            alert('success! your thing was sent');
+          }
+          );
+      }
+      else {
+        var decoded = canvas.toDataURL("image/png");
+
+        decoded = decoded.substring(decoded.indexOf(',')+1);
+        //decoded = atob(decoded);
+
+        //decoded = decoded.substring(0,30);
+
+        //decoded = decoded.replace(/\s/g,%, '');
+        $.get(
+          url ="/getmethod/",
+          data = {"x":xPosition, 
+                  "y":yPosition,
+                  "w":target.width,
+                  "h":target.height,
+                  "imagetosend": decoded},
+          success=function(data){
+            alert('success! your thing was sent');
+          }
+          );
+      }
         l.preventDefault();
         return xPosition, yPosition;
       }, false);
@@ -325,8 +413,8 @@ input:checked + .slider:before {
 </label>
 
 <div id="container">
-  <!-- <img src="{{ url_for('static', filename='sago.jpg')}}" id="target" alt="[Jcrop Example]" /> -->
-  <img src="http://192.168.8.1:8082/?action=stream" id="target" alt="[LiveStream]" />
+  <img src="{{ url_for('static', filename='sago.jpg')}}" id="target" alt="[Jcrop Example]" />
+  <!-- <img src="http://192.168.8.1:8082/?action=stream" id="target" alt="[LiveStream]" /> -->
 </div>
 <br />
 

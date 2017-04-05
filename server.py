@@ -1,10 +1,13 @@
 #!/usr/bin/env python
-#import re
+
 from __future__ import print_function
 import socket, select
+import sys
+import struct
 import threading
+import json
 from flask import Flask, request, render_template, jsonify
-#import queue
+from binascii import a2b_base64
 
 
 TS = 0
@@ -29,17 +32,81 @@ FP = 0
 FR = 0
 FT = 0
 TE = 0
+global sending
+sending = 0
+
+def connect():
+  sock1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
+  s_a = ("192.168.0.2",4003) #IP and Port Number
+  print ("before bind")
+  sock1.bind(s_a)
+  print ("bind")
+  sock1.listen(1)
+  print("Waiting for Connection")
+  global connection
+  connection, c_a = sock1.accept()
+
+print ("pre connect")
+if sending == 0:
+  connect()
+  global sending
+  sending = 1
+  
+print ("after connect")
+
+
+
+
 
 app = Flask(__name__)
-#app.config['SERVER_NAME'] = "127.0.0.1:1234"
-#app.config['DEBUG'] = True
 
-@app.route('/')
+
+
+
+@app.route('/', methods=['GET']) 
 def index():
-  return render_template('index.html')
+
+  return render_template('index.html', U1=U1)
+
+@app.route('/getmethod/')
+def get_javascript_data():
+  
+
+  x = request.args.get("x")
+  y = request.args.get("y")
+  w = request.args.get("w")
+  h = request.args.get("h")
+  
+
+
+  print (x)
+  print (y)
+  print (w)
+  print (h)
+  imagetosend = request.args.get("imagetosend")
+  converted_image = a2b_base64(imagetosend)
+  print (converted_image)
+  #connection.send("hello world")
+  mess = struct.pack('>I',int(x)) # Packs the int 1001 into bytes to send
+  #global connection
+  connection.send(mess)
+  mess = struct.pack('>I',int(y))
+  connection.send(mess)
+  mess = struct.pack('>I',int(w))
+  connection.send(mess)
+  mess = struct.pack('>I',int(h))
+  connection.send(mess)
+  connection.send(converted_image)
+  connection.close()
+  sock1.close()
+
+  return jsonify(x=x, y=y, w=w, h=h)
+
+
 
 @app.route('/sensors')
 def interactive():
+  print (request.args.get("i_width"))
   return render_template('interactive.html')
 
 @app.route('/background_process')
@@ -57,10 +124,8 @@ def background_process():
 #no need for queue since python has a thread system for this... explain this properly
 
 
-#buffer = queue.Queue(1024)
 
-
-def udp(): #removed buffer arg
+def udp(): 
   global TS
   global IX
   global IY
@@ -126,15 +191,11 @@ def udp(): #removed buffer arg
 
     #print ("U1 is: ", U1)
 
-      
-      #buffer.put(data.decode().split("\t"))
-      #print(buffer.qsize())
-
+    
     # socksend = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # socksend.sendto(data, ("127.0.0.1", 5005))
     # print ("message:", data)
 
-#print (U1)
 
 def printVar():
   threading.Timer(1.0, printVar).start()
@@ -149,13 +210,23 @@ def printVar():
   print("GV is: ", GV)
   print("GS is: ", GS)
 
+
+
 if __name__ == '__main__':
   #global U1
-  threading.Thread(target=udp).start() #removed ', args=(buffer)''
+  #****threading.Thread(target=udp).start() #removed ', args=(buffer)''
   #print ("U1 is: ", U1)
   #printVar()
 
   # mythread = Athread()
   # mythread.start()
+  #***threading.Thread(target=connect).start()
+  
+  print ("pre app.run")
   app.run()
+
+  print ("after app.run")
+  
+
+  print (sending)
   #app.run(host='127.0.0.1', port=1234)
