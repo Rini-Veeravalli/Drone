@@ -2,7 +2,7 @@
 
   {% block content %}
 
-    <title>Drone Web App | HomePage</title>
+      <title>Drone Web App | Object Tracking</title>
 
                 <script>
               	var U1 = {{ U1 }};
@@ -40,7 +40,8 @@
                   }
                 });
 
-    
+    $("#alert_success").hide();
+
 
     function showCoords(c) {
       console.log(c.x + ", " + c.y + ", " + c.x2 + ", " + c.y2 + ", " + c.w + ", " + c.h);
@@ -64,25 +65,42 @@
                   "h":s_h,
                   "imagetosend": decoded},
           success=function(data){
-            alert('success! your thing was sent');
+            //alert('success! your object was sent to the drone');
+            $("#alert_success").show();
+            setTimeout(function(){ $("#alert_success").hide(); }, 3000);
+
           }
         );
 
       return s_x, s_y, s_x2, s_y2, s_w, s_h, s_mx, s_my;
     }
 
-    
+    $('#switch_id').mouseenter(function(){
+      $('#hoveringTooltip').css({
+        "top" : $(this).offset().top + -20,
+        "left" : $(this).offset().left + 0,
+        "background-color" : '#ff1d8e',
+        "color" : "white"
+      });
+      $('#hoveringTooltip').show();
+    });
+    $('#switch_id').mouseleave(function(){
+      $('#hoveringTooltip').hide();
+    });
     
     $('input[name=toggleswitch]').change(function(){
       if($(this).is(':checked'))
       {
+        $('#hoveringTooltip').html("Click to double-click your selection");
+
         console.log('on switch - dragbox');
 		    context = canvas.getContext('2d');
         context.clearRect(0, 0, canvas.width, canvas.height);
         
         window.removeEventListener('load', startup, false);
         
-        
+        $("#alert_success").hide();
+
 
         $('#target').Jcrop({
           onSelect: showCoords,  //METHOD 1 **INTEGRATE**
@@ -104,6 +122,7 @@
       }
       else 
       {
+        $('#hoveringTooltip').html("Click to drag-and-release your selection");
         startup();	
       }
     });
@@ -127,6 +146,8 @@
        	streaming = true;
       }
       
+      $("#alert_success").hide();
+
       acontainer.addEventListener('dblclick', function firstClick(l) {
        	getClickCoOrds(l);
         console.log(xPosition + ", " + yPosition);
@@ -146,7 +167,9 @@
                   "h":target.height,
                   "imagetosend": decoded},
           success=function(data){
-            alert('success! your thing was sent');
+            //alert('success! your thing was sent');
+            $("#alert_success").show();
+            setTimeout(function(){ $("#alert_success").hide(); }, 3000);
           }
           );
 
@@ -267,6 +290,7 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 0px ;
 }
+
 #container { //****//
   width: auto;
   height: auto;
@@ -275,6 +299,33 @@ input:checked + .slider:before {
   cursor: pointer;
 }
 
+.alert {
+    padding: 20px;
+    background-color: #595959;
+    color: #ff77bb;
+    opacity: 1;
+    transition: opacity 0.6s;
+    margin-bottom: 15px;
+    position: fixed;
+    bottom: 0;
+}
+
+
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: #ff77bb;
+}
 
 </style>
 
@@ -287,45 +338,72 @@ input:checked + .slider:before {
 
 <!--div class="container"-->
 
+<div class=container_mid>
+  <div class="page-header">
+<!--     <h1>Object Tracking and Drone Control</h1>
+ -->  </div>
 
-<div class="page-header">
-
-<h1>Drone Live-Stream | Home Page </h1>
-</div>
-
-<label class="switch">
-  <input type="checkbox" name="toggleswitch"/>
-  <div class="slider round"></div>
-</label>
-
-<div id="container">
-  <img src="{{ url_for('static', filename='sago.jpg')}}" id="target" alt="[Jcrop Example]" />
-  <!-- <img src="http://192.168.8.1:8082/?action=stream" id="target" alt="[LiveStream]" /> -->
-</div>
-
-<!--div id="preview-pane">
-  <div class="preview-container">
-    <img src="sago.jpg" class="jcrop-preview" alt="Preview" />
-    < <img src="http://192.168.159.128/stream" class="jcrop-preview" alt="Preview" /> >
+  <div class="switch_div">
+  <label class="switch">
+    <input type="checkbox" name="toggleswitch"/>
+    <div class="slider round" id="switch_id"></div>
+  </label>
   </div>
-  <b>PREVIEW: NOT TO SCALE</b>
-</div-->
 
 
-<canvas id="canvas"></canvas>
 
-<button id="show-preview">Show preview of image</button>
+  <div id="container">
+    <img src="{{ url_for('static', filename='sago.jpg')}}" id="target" alt="[Jcrop Example]" />
+    <!-- <img src="http://192.168.8.1:8082/?action=stream" id="target" alt="[LiveStream]" /> -->
+  </div>
 
-<button id="sensor_data" onclick="sensorFunction()">Click for sensor data</button>
-<p id="sensor"></p>
+  <!--div id="preview-pane">
+    <div class="preview-container">
+      <img src="sago.jpg" class="jcrop-preview" alt="Preview" />
+      < <img src="http://192.168.159.128/stream" class="jcrop-preview" alt="Preview" /> >
+    </div>
+    <b>PREVIEW: NOT TO SCALE</b>
+  </div-->
 
-<div class="description">
-  <p>
-    <b>Use toggle to switch between one-click (off) and drag-box (on) methods.</b>
-  </p>
+
+  <canvas id="canvas"></canvas>
+
+  <button id="show-preview">Show preview of image</button>
+
+  <button id="sensor_data" onclick="sensorFunction()">Click for sensor data</button>
+  <p id="sensor"></p>
+
+  <div class="description">
+    <p>
+      <b>Use toggle to switch between one-click (off) and drag-box (on) methods.</b>
+    </p>
+  </div>
+
+
+  <div id='hoveringTooltip' style='position:fixed;'>
+  </div>
+
 </div>
 
+<div class=container_left>
+  <div class="alert" id="alert_success">
+    <span class="closebtn">&times;</span>
+    <strong>Success!</strong> Your object has been sent to the drone.
+  </div>
+</div>
 
+<script>
+var close = document.getElementsByClassName("closebtn");
+var i;
+
+for (i = 0; i < close.length; i++) {
+    close[i].onclick = function(){
+        var div = this.parentElement;
+        div.style.opacity = "0";
+        setTimeout(function(){ div.style.display = "none"; }, 600);
+    }
+}
+</script>
 </div>
 
 

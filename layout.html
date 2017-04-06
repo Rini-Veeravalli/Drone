@@ -3,13 +3,116 @@
 	lang="en-GB" xml:lang="en-GB">
 
 <head>
-  <title>Drone-Live Stream | Jcrop Demo</title>
   <meta name="description" content="webpage"/>
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
   <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1"/> 
+  <link href="https://fonts.googleapis.com/css?family=Lora|Questrial" rel="stylesheet"> 
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="http://jcrop-cdn.tapmodo.com/v0.9.12/js/jquery.Jcrop.js"></script>  
 
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+
+<!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <style type="text/css">
+	h1 {
+	font-family: 'Lora', serif;
+	font-size: 40px;
+	}
+
+	ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #4c4c4c;
+    position: fixed;
+    top: 0;
+    width: 40%;
+	}
+
+	li {
+	    float: left;
+	}
+
+	li a {
+		font-size:20px;
+		font-family: 'Questrial', sans-serif;
+	    display: block;
+	    color: white;
+	    text-align: center;
+	    padding: 14px 16px;
+	    text-decoration: none;
+	}
+
+	
+	.nav-link:hover {
+	    background-color: #ff1d8e;
+	}
+	
+
+	.container_mid{
+	width:602px;
+	margin-left:auto;
+	margin-right:auto;
+	}
+
+	.container_left{
+		float: right;
+	}
+	body {
+	}
+  </style>
+
+
+<!--   <nav> 
+ --><!--   class="navbar navbar-toggleable-md navbar-light bg-faded" style="background-color: #940c99; >
+ -->  
+<div class=container_mid>
+ <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+<!--   <a class="navbar-brand" href="#" style="color:white; font-size:20px;">Hello I'm Rini c: </a>
+ --> 
+<!--  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+ -->    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/" style="color:white; font-size:20px;">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="livestream" style="color:white; font-size:20px;">Live-Stream</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="track" style="color:white; font-size:20px;">Tracking</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="sensors" style="color:white; font-size:20px;">Sensors</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/map" style="color:white; font-size:20px;">Map</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/about" style="color:white; font-size:20px;">About</a>
+      </li>
+      <!-- <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown link
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li> -->
+    </ul>
+    <div class=container_mid>
+<!--   </div>
+ --><!-- </nav>
+ -->
   {% block content %}
   {% endblock %}

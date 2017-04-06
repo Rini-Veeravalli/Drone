@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <title>Drone Web App | Live-Stream</title>
+
+<script type="text/javascript">
+	
+
+</script>
+
+</head>
+
+<body>
+
+<div class=container_mid>
+	<div class="page-header">
+		<h1>Drone | Live-Stream </h1>
+	</div>
+
+
+	<div id="container">
+  		<img src="{{ url_for('static', filename='sago.jpg')}}" id="target" alt="[Jcrop Example]" />
+  		<!-- <img src="http://192.168.8.1:8082/?action=stream" id="target" alt="[LiveStream]" /> -->
+	</div>
+</div>
+</body>
+</html>
+
+{% endblock %}

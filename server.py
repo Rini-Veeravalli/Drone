@@ -35,24 +35,25 @@ TE = 0
 global sending
 sending = 0
 
-def connect():
-  sock1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
-  s_a = ("192.168.0.2",4003) #IP and Port Number
-  print ("before bind")
-  sock1.bind(s_a)
-  print ("bind")
-  sock1.listen(1)
-  print("Waiting for Connection")
-  global connection
-  connection, c_a = sock1.accept()
+#******UNCOMMENT ALL BELOW**********
+# def connect():
+#   sock1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
+#   s_a = ("192.168.0.2",4003) #IP and Port Number
+#   print ("before bind")
+#   sock1.bind(s_a)
+#   print ("bind")
+#   sock1.listen(1)
+#   print("Waiting for Connection")
+#   global connection
+#   connection, c_a = sock1.accept()
 
-print ("pre connect")
-if sending == 0:
-  connect()
-  global sending
-  sending = 1
+# print ("pre connect")
+# if sending == 0:
+#   connect()
+#   global sending
+#   sending = 1
   
-print ("after connect")
+# print ("after connect")
 
 
 
@@ -86,27 +87,27 @@ def get_javascript_data():
   imagetosend = request.args.get("imagetosend")
   converted_image = a2b_base64(imagetosend)
   print (converted_image)
-  #connection.send("hello world")
-  mess = struct.pack('>I',int(x)) # Packs the int 1001 into bytes to send
-  #global connection
-  connection.send(mess)
-  mess = struct.pack('>I',int(y))
-  connection.send(mess)
-  mess = struct.pack('>I',int(w))
-  connection.send(mess)
-  mess = struct.pack('>I',int(h))
-  connection.send(mess)
-  connection.send(converted_image)
-  connection.close()
-  sock1.close()
+  #*********UNCOMMENT THIS********
+  # mess = struct.pack('>I',int(x)) # Packs the int 1001 into bytes to send
+  # connection.send(mess)
+  # mess = struct.pack('>I',int(y))
+  # connection.send(mess)
+  # mess = struct.pack('>I',int(w))
+  # connection.send(mess)
+  # mess = struct.pack('>I',int(h))
+  # connection.send(mess)
+  # connection.send(converted_image)
+  # connection.close()
+  # sock1.close()
 
   return jsonify(x=x, y=y, w=w, h=h)
 
-
+@app.route('/track', methods=['GET'])
+def track():
+  return render_template('track.html', U1=U1)
 
 @app.route('/sensors')
 def interactive():
-  print (request.args.get("i_width"))
   return render_template('interactive.html')
 
 @app.route('/background_process')
@@ -116,7 +117,17 @@ def background_process():
   except Exception as e:
     return str(e)
 
+@app.route('/livestream')
+def livestream():
+  return render_template('livestream.html')
 
+@app.route('/map')
+def map():
+  return render_template('map.html')
+
+@app.route('/about')
+def about():
+  return render_template('about.html')
 #connect to client via websockets
 #send request or update automatically periodically
 
@@ -230,3 +241,8 @@ if __name__ == '__main__':
 
   print (sending)
   #app.run(host='127.0.0.1', port=1234)
+
+
+
+
+
