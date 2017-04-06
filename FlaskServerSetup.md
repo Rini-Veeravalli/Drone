@@ -6,6 +6,8 @@
 
 `pip install --upgrade pip`
 
+
+{ don't really need the rest
 `sudo apt install virtualenv`
 
 `virtualenv flask`
@@ -16,12 +18,9 @@
     
 `sudo apt-get install python3-flask`
 
-  then `cd ..` back into directory with flaskserver.py
+  then `cd ..` back into directory with flaskserver.py }
+  
 `python3 flaskserver.py`
 
 
-Installing Celery:
 
-`sudo -H pip install flask-celery`
-  `pip install --upgrade pip`  [pip version 8.1.1 upgrade to 9.0.1 if you want?]
- `sudo -H pip install redis`
