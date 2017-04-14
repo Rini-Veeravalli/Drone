@@ -75,6 +75,43 @@
       return s_x, s_y, s_x2, s_y2, s_w, s_h, s_mx, s_my;
     }
 
+    $('button').mouseenter(function(){
+      $('#hoveringTooltip2').html("Save camera image");
+
+      $('#hoveringTooltip2').css({
+        "top" : $(this).offset().top + -20,
+        "left" : $(this).offset().left + 0,
+        "background-color" : '#ff1d8e',
+        "color" : "white"
+      });
+      $('#hoveringTooltip2').show();
+    });
+    $('button').mouseleave(function(){
+      $('#hoveringTooltip2').hide();
+    });
+
+    function downloadCanvas(link, canvasId, filename) {
+    link.href = document.getElementById(canvasId).toDataURL();
+    link.download = filename;
+    }
+
+    /** 
+     * The event handler for the link's onclick event. We give THIS as a
+     * parameter (=the link element), ID of the canvas and a filename.
+    */
+    $('button').click(function() {
+        //downloadCanvas(this, 'canvas', 'test.png');
+        $('<form></form>')
+        .attr('action', 'testing.png')
+        .appendTo('body').submit().remove();
+    }, false);
+
+    // $('button').click(function() {
+    //   console.log("hello");
+    //   $('button').href = canvas.toDataURL();
+    //   $('button').download = "drone_camera.png";
+    // }, false);
+
     $('#switch_id').mouseenter(function(){
       $('#hoveringTooltip').css({
         "top" : $(this).offset().top + -20,
@@ -243,53 +280,7 @@
 /*  max-width: 602; //***//
 /*  max-height: 400;*/
 }
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-.switch input {display:none;}
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-input:checked + .slider {
-  background-color: #2196F3;
-}
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-/* Rounded sliders */
-.slider.round {
-  border-radius: 0px;
-}
-.slider.round:before {
-  border-radius: 0px ;
-}
+
 
 #container { //****//
   width: auto;
@@ -327,6 +318,30 @@ input:checked + .slider:before {
     color: #ff77bb;
 }
 
+.button {
+    display: inline-block;
+    color: #ff77bb;
+    border: none;
+    background: none;
+    padding-bottom: 0px;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-top: 3px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    position: absolute;
+}
+
+.button:hover{
+    color: #ff1d8e;
+}
+.glyphicon.glyphicon-floppy-disk {
+    font-size: 25px;
+    display: inline-block;
+}
 </style>
 
 
@@ -344,13 +359,17 @@ input:checked + .slider:before {
  -->  </div>
 
   <div class="switch_div">
-  <label class="switch">
-    <input type="checkbox" name="toggleswitch"/>
-    <div class="slider round" id="switch_id"></div>
-  </label>
+    <label class="switch">
+      <input type="checkbox" name="toggleswitch"/>
+      <div class="slider round" id="switch_id"></div>
+    </label>
+
+    <button type="button" class="button" aria-label="Save">
+      <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+    </button>
   </div>
-
-
+  
+  
 
   <div id="container">
     <img src="{{ url_for('static', filename='sago.jpg')}}" id="target" alt="[Jcrop Example]" />
@@ -381,6 +400,8 @@ input:checked + .slider:before {
 
 
   <div id='hoveringTooltip' style='position:fixed;'>
+  </div>
+  <div id='hoveringTooltip2' style='position:fixed;'>
   </div>
 
 </div>

@@ -11,26 +11,26 @@ from binascii import a2b_base64
 
 
 TS = 0
-IX = 0
-IY = 0
-IZ = 0
-U1 = 0
-L1 = 0
-KH = 0
-KV = 0
-ST = 0
-BP = 0
-BT = 0
-BA = 0
-GA = 0
-GO = 0
-GH = 0
-GV = 0
-GS = 0
-FY = 0
-FP = 0
-FR = 0
-FT = 0
+IX = 24
+IY = 34
+IZ = 45
+U1 = 5
+L1 = 67
+KH = 10
+KV = 68
+ST = 45
+BP = 34
+BT = 45
+BA = 56
+GA = 79
+GO = 56
+GH = 89
+GV = 4
+GS = 45
+FY = 567
+FP = 34
+FR = 46
+FT = 34
 TE = 0
 global sending
 sending = 0
@@ -108,7 +108,7 @@ def track():
 
 @app.route('/sensors')
 def interactive():
-  return render_template('interactive.html')
+  return render_template('interactive.html', TS=TS, IX=IX, IY=IY, IZ=IZ, U1=U1, L1=L1, KH=KH, KV=KV, ST=ST, BP=BP, BT=BT, BA=BA, GA=GA, GO=GO, GH=GH, GV=GV, GS=GS, FY=FY, FP=FP, FR=FR, FT=FT, TE=TE)
 
 @app.route('/background_process')
 def background_process():
