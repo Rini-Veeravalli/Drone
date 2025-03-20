@@ -1,8 +1,8 @@
-#Set-up Guide
+# Set-up Guide
 Guide to setting up the Drone LiveStream
 ------
 
-###Table of Contents
+### Table of Contents
 
 [Virtual Machine](#virtualmachine)	
 
@@ -34,10 +34,10 @@ Guide to setting up the Drone LiveStream
 
 
 ----
-<a name="virtualmachine"/>###Virtual Machine</a>
+<a name="virtualmachine"/><h3>Virtual Machine</h3></a>
 
 
-<a name="usinganubuntuvm"/>####Using an Ubuntu VM:</a> 
+<a name="usinganubuntuvm"/><h4>Using an Ubuntu VM:</h4></a> 
 
 For testing on your own machine:  
 Download VMware and Ubuntu ISO file/image (See Naim’s document for VMware installation).
@@ -48,7 +48,7 @@ Drone: The rest of the set-up should be run on the JETSON TK1.
 
 ----
 
-<a name="motionprerequisites"/>###Motion Pre-requisites:</a> 
+<a name="motionprerequisites"/><h3>Motion Pre-requisites:</h3></a> 
 
 Needed are certain libraries from _glibc_, _libjpeg_, _zlib_, _ffmpeg_ and their development counterparts, GNU ‘make’ 3.79 or newer, GCC 4.7 or newer.  
 _Perl5_ not needed, but can be used to test installation. 
@@ -60,9 +60,9 @@ _Perl5_ not needed, but can be used to test installation.
 | libz |	zlib1g, zlib1g-dev |
 | libavcodec, libavformat |	libavcodec-dev, libavcodec0d, libavformat-dev, libavformat0d, libav-tools |
 											    	
-<a name="packageinstallation"/>
-####Package Installation:
-</a> 
+<a name="packageinstallation"/><h4>
+Package Installation:
+</h4></a> 
 
 Can download these packages online, follow their installation guides, which usually require: `./configure; make; sudo make install`.
 
@@ -88,8 +88,8 @@ Useful commands:
 
 ----
 
-<a name="motioninstallation"/>
-###Motion Installation:
+<a name="motioninstallation"/><h3>
+</h3>Motion Installation:
 </a> 
 
 Again, you can download source code, 
@@ -116,33 +116,33 @@ Make directory to store images from motion:
 
 ----
 
-<a name="editingthemotionconfigurationfile"/>
-###Editing the Motion configuration file:
-</a>
+<a name="editingthemotionconfigurationfile"/><h3>
+Editing the Motion configuration file:
+<h3></a>
 
 Edit ~/.motion/motion.conf  (.conf file in the home directory):
 
 
 
-<a name="daemon">
-####Daemon
-</a>
+<a name="daemon"><h4>
+Daemon
+</h4></a>
 
 __`daemon on`__  daemon starts automatically
 
 
 
-<a name="basic">
-####Basic Setup Mode
-</a>
+<a name="basic"><h4>
+Basic Setup Mode
+</h4></a>
 
 `logfile /var/log/motion/motion.log` 	file to save log messages
 
 
 
-<a name="capture">
-####Capture device options
-</a>
+<a name="capture"><h4>
+Capture device options
+</h4></a>
 
 `videodevice /dev/video0`	videodevice to be used for capturing, /dev/video0 present when video camera is connected to the computer via USB.
 
@@ -160,9 +160,9 @@ __`height 480`__			“ 	“	“ 	- image height
 
 
 
-<a name="motion">
-####Motion Detection Settings
-</a>
+<a name="motion"><h4>
+Motion Detection Settings
+</h4></a>
 
 `threshold 1500`	no. of changed pixes in an image that triggers motion detection
 
@@ -176,9 +176,9 @@ __`post-capture 2`__		“	“	“     “   “ 	after motion. Use large values 
 
 
 
-<a name="image">
-####Image File Output
-</a>
+<a name="image"><h4>
+Image File Output
+</h4></a>
 
 `output_pictures off` Output pictures when motion is detected. 'first'-first picture of event saved. 'best'-picture with most motion is saved. 'center'-picture with motion nearest centre is saved.
 
@@ -188,9 +188,9 @@ __`post-capture 2`__		“	“	“     “   “ 	after motion. Use large values 
 
 
 
-<a name="ffmpeg">
-####FFMPEG related options
-</a>
+<a name="ffmpeg"><h4>
+FFMPEG related options
+</h4></a>
 
 __`ffmpeg_output_movies on`__	ffmpeg encodes movies in realtime
 
@@ -200,9 +200,9 @@ __`ffmpeg_video_codec msmpeg4`__	ffmpeg's codec for video compression. msmpeg4 b
 
 
 
-<a name="text">
-####Text Display
-</a>
+<a name="text"><h4>
+Text Display
+</h4></a>
 
 __`text_right %d-%m-%Y\n%T-%q`__ 	swap day and year, to follow the UK format
 
@@ -210,9 +210,9 @@ __`text_right %d-%m-%Y\n%T-%q`__ 	swap day and year, to follow the UK format
 
 
 
-<a name="target">
-####Target Directories and filenames For Images And Films
-</a>
+<a name="target"><h4>
+Target Directories and filenames For Images And Films
+</h4></a>
 
 __`target_dir /home/username/.motion/motion-images`__ *	current working directory - target directory for 
 picture and movie files to be saved, better as an absolute path
@@ -227,9 +227,9 @@ __`timelapse_filename %d%m%Y-timelapse`__ 	change to UK format
 
 
 
-<a name="live">
-####Live Stream Server
-</a>
+<a name="live"><h4>
+Live Stream Server
+</h4></a>
 
 `stream quality 50` 	quality (in %) of jpeg images produced
 
@@ -237,17 +237,17 @@ __`stream_localhost off`__  Restricts stream connections to localhost only when 
 
 
 
-<a name="http">
-####HTTP Based Control
-</a>
+<a name="http"><h4>
+HTTP Based Control
+</h4></a>
 
 __webcontrol_localhost off__  Restricts control connects to local host only when 'on'
 
 
 
-<a name="tracking">
-####Tracking(Pan/Tilt)
-</a>
+<a name="tracking"><h4>
+Tracking(Pan/Tilt)
+</h4></a>
 
 See .config file for options
 
@@ -257,9 +257,9 @@ Do we want to log to the database when creating motion-triggered picture/snapsho
 
 
 ------
-<a name="thread">
-####Thread config files
-</a>
+<a name="thread"><h4>
+Thread config files
+</h4></a>
 
 One for each camera, with configurations for each. With one camera, need only the .config file. With two cameras, need the .config file and a thread file for each camera.
 
@@ -284,9 +284,9 @@ Video stream should appear
 ----
 
 
-<a name="webbrowser">
-###Web Browser
-</a>
+<a name="webbrowser"><h3>
+Web Browser
+</h3></a>
 
 How to access the video stream via a html file.  
 
